@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         loadListAudios(file);
         adapter = new AdapterForAudios(getApplicationContext(), listAudios);
+        ((AdapterForAudios) adapter).setOnItemClickListener(new AdapterForAudios.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Utils.showToast(getApplicationContext(),"CLick sobre la posicion "+position);
+            }
+        });
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
         recycler.hasFixedSize();
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     private static void loadListAudios(File file) {
@@ -72,7 +79,5 @@ public class MainActivity extends AppCompatActivity {
         listAudios.add(name);
         loadListAudios(file);
         adapter.notifyDataSetChanged();
-
     }
-
 }
