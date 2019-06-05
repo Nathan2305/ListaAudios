@@ -3,22 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-<LinearLayout
-    android:padding="10dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:ignore="MissingConstraints">
-    <ImageView
-        android:src="@drawable/audio_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
-    <TextView
-        android:layout_margin="10dp"
-        android:textSize="20sp"
-        android:id="@+id/name_audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/audio_icon" />
+
+        <TextView
+            android:id="@+id/name_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
