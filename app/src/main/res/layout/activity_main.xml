@@ -20,25 +20,27 @@
         tools:ignore="MissingConstraints">
 
         <Button
-            android:layout_margin="10dp"
+            style="@style/BtnAudios"
             android:id="@+id/grabar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="Grabar" />
 
         <Button
+            style="@style/BtnAudios"
             android:id="@+id/detener"
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:text="Detener" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
-        android:layout_marginBottom="100dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp" />
 </android.support.constraint.ConstraintLayout>
