@@ -17,7 +17,9 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import static com.example.listaaudios.MainActivity.FOLDER_AUDIO;
+import static com.example.listaaudios.MainActivity.editor;
 import static com.example.listaaudios.MainActivity.seekBar;
+import static com.example.listaaudios.MainActivity.sharedPreferences;
 
 public class RecorderService extends Service implements MediaPlayer.OnPreparedListener {
     MediaRecorder mediaRecorder;
@@ -63,6 +65,9 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
                     mediaRecorder.prepare();
                     mediaRecorder.start();
                     Utils.showToast(this, "Iniciando servicio de audio");
+                    editor=sharedPreferences.edit();
+                    editor.putString("STATE","PLAYING");
+                    editor.apply();
                 } else {
                     Utils.showToast(this, "No se creó el archivo :" + nameAudio);
                 }
