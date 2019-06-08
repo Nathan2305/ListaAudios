@@ -122,6 +122,10 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
         if (mediaPlayer != null) {
             mediaPlayer.release();
         }
+        editor=sharedPreferences.edit();
+        editor.putString("STATE","NO_PLAYING");
+        editor.apply();
+
     }
 
     @Override

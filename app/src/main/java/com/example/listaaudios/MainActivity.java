@@ -3,6 +3,8 @@ package com.example.listaaudios;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPreferences=getSharedPreferences("AUDIO_PREFERENCES", Context.MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("AUDIO_PREFERENCES", MODE_PRIVATE);
         seekBar = findViewById(R.id.seekBar);
         FOLDER_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cibertec/Audios";
         file = new File(FOLDER_AUDIO);
@@ -62,21 +64,31 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
         recycler.hasFixedSize();
         playStop = findViewById(R.id.playStop);
-        playStop.setImageResource(R.drawable.mic_icon);
+       /* ImageView imageView=new ImageView(getApplicationContext());
+        imageView.setImageResource(R.drawable.audio_icon);
+        imageView.buildDrawingCache();
+        Bitmap bmap = imageView.getDrawingCache();
+        bmap.setWidth(playStop.getWidth());
+        bmap.setHeight(playStop.getHeight());*/
+        //playStop.setImageResource(R.drawable.mic_icon);
+        //playStop.setImageBitmap(bmap);
+       /* Drawable drawable=getResources().getDrawable(R.drawable.audio_icon);
+        playStop.setImageDrawable(drawable);*/
+        //playStop.setBackgroundDrawable(drawable);
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sharedPreferences.contains("STATE")) {
-                    if (sharedPreferences.getString("STATE","").equalsIgnoreCase("PLAYING")){
+                    if ("PLAYING".equalsIgnoreCase(sharedPreferences.getString("STATE", ""))) {
                         //Detener Audio
-                        stopService(new Intent(getApplicationContext(), RecorderService.class));
-                    }else { //Iniciar Audio
-                        Intent intentRecordAudio = new Intent(getApplicationContext(), RecorderService.class);
+                        stopService(new Intent(MainActivity.this, RecorderService.class));
+                    } else { //Iniciar Audio
+                        Intent intentRecordAudio = new Intent(MainActivity.this, RecorderService.class);
                         intentRecordAudio.putExtra(Utils.RECORD_AUDIO, Utils.RECORD_AUDIO);
                         startService(intentRecordAudio);
                     }
                 } else {
-                    Intent intentRecordAudio = new Intent(getApplicationContext(), RecorderService.class);
+                    Intent intentRecordAudio = new Intent(MainActivity.this, RecorderService.class);
                     intentRecordAudio.putExtra(Utils.RECORD_AUDIO, Utils.RECORD_AUDIO);
                     startService(intentRecordAudio);
                 }

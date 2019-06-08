@@ -7,23 +7,57 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seekBar"
+    <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical"
+        android:padding="5dp"
         app:layout_constraintTop_toBottomOf="@id/recycler"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints">
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp" />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <Button
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- app:layout_constraintBottom_toTopOf="@id/playStop"-->
 
 
@@ -32,10 +66,13 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/verdeClaro"
+        android:src="@drawable/baseline_record_voice_over_white_48"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/seekBar"
+        app:layout_constraintTop_toBottomOf="@id/container"
         tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>
