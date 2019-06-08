@@ -18,12 +18,13 @@ import java.util.Date;
 
 import static com.example.listaaudios.MainActivity.FOLDER_AUDIO;
 import static com.example.listaaudios.MainActivity.editor;
+import static com.example.listaaudios.MainActivity.estado;
 import static com.example.listaaudios.MainActivity.seekBar;
 import static com.example.listaaudios.MainActivity.sharedPreferences;
 
 public class RecorderService extends Service implements MediaPlayer.OnPreparedListener {
     MediaRecorder mediaRecorder;
-    MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
     String nameAudio = "";
     File fileAudio = null;
     Runnable runnable;
@@ -42,7 +43,7 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
     @Override
     public void onCreate() {
         super.onCreate();
-        handler=new Handler();
+        handler = new Handler();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
             fileAudio = new File(FOLDER_AUDIO, nameAudio);
             try {
                 if (fileAudio.createNewFile()) {
-                    Utils.showToast(this, "Se creó archivo de audio");
+                    Utils.showToast(this, "Se creó archivo de audio " + fileAudio.getName());
                     OUTPUTFILE = FOLDER_AUDIO + "/" + nameAudio;
                     mediaRecorder = new MediaRecorder();
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -65,9 +66,11 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
                     mediaRecorder.prepare();
                     mediaRecorder.start();
                     Utils.showToast(this, "Iniciando servicio de audio");
-                    editor=sharedPreferences.edit();
-                    editor.putString("STATE","PLAYING");
+                    editor = sharedPreferences.edit();
+                    editor.putString("STATE", "PLAYING");
+                    editor.putString("STATE_TXT", "Grabando audio...");
                     editor.apply();
+                    estado.setText(sharedPreferences.getString("STATE_TXT", ""));
                 } else {
                     Utils.showToast(this, "No se creó el archivo :" + nameAudio);
                 }
@@ -82,7 +85,6 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
                 mediaPlayer.setOnPreparedListener(this);
                 mediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
                 mediaPlayer.prepareAsync();
-
             } catch (IOException e) {
                 Utils.showToast(getApplicationContext(), "Error reproduciendo audio " + e.getMessage());
             }
@@ -90,9 +92,9 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser){
-                        mediaPlayer.seekTo(progress);
-                    }
+                if (fromUser) {
+                    mediaPlayer.seekTo(progress);
+                }
             }
 
             @Override
@@ -122,9 +124,11 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
         if (mediaPlayer != null) {
             mediaPlayer.release();
         }
-        editor=sharedPreferences.edit();
-        editor.putString("STATE","NO_PLAYING");
+        editor = sharedPreferences.edit();
+        editor.putString("STATE", "NO_PLAYING");
+        editor.putString("STATE_TXT", "");
         editor.apply();
+        estado.setText(sharedPreferences.getString("STATE_TXT", ""));
 
     }
 
@@ -144,7 +148,7 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
                     changeSeekbar(mp);
                 }
             };
-            handler.postDelayed(runnable,1000);
+            handler.postDelayed(runnable, 1000);
         }
     }
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -30,15 +31,20 @@ public class MainActivity extends AppCompatActivity {
     static RecyclerView.Adapter adapter;
     public static String FOLDER_AUDIO = "";
     public static AppCompatSeekBar seekBar;
+    Button playStopAudio;
     static File file;
     public static SharedPreferences sharedPreferences;
     public static SharedPreferences.Editor editor;
     static ArrayList<String> listAudios = null;
+   public static TextView estado;
+    int length;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        playStopAudio=findViewById(R.id.playStopAudio);
+        estado=findViewById(R.id.estado);
         sharedPreferences = getApplicationContext().getSharedPreferences("AUDIO_PREFERENCES", MODE_PRIVATE);
         seekBar = findViewById(R.id.seekBar);
         FOLDER_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cibertec/Audios";
@@ -64,17 +70,6 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
         recycler.hasFixedSize();
         playStop = findViewById(R.id.playStop);
-       /* ImageView imageView=new ImageView(getApplicationContext());
-        imageView.setImageResource(R.drawable.audio_icon);
-        imageView.buildDrawingCache();
-        Bitmap bmap = imageView.getDrawingCache();
-        bmap.setWidth(playStop.getWidth());
-        bmap.setHeight(playStop.getHeight());*/
-        //playStop.setImageResource(R.drawable.mic_icon);
-        //playStop.setImageBitmap(bmap);
-       /* Drawable drawable=getResources().getDrawable(R.drawable.audio_icon);
-        playStop.setImageDrawable(drawable);*/
-        //playStop.setBackgroundDrawable(drawable);
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,11 +86,33 @@ public class MainActivity extends AppCompatActivity {
                     Intent intentRecordAudio = new Intent(MainActivity.this, RecorderService.class);
                     intentRecordAudio.putExtra(Utils.RECORD_AUDIO, Utils.RECORD_AUDIO);
                     startService(intentRecordAudio);
+
+                }
+            }
+        });
+        playStopAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (RecorderService.mediaPlayer!=null){
+                    if (RecorderService.mediaPlayer.isPlaying()){
+                        RecorderService.mediaPlayer.stop();
+                        length=RecorderService.mediaPlayer.getCurrentPosition();
+                    }else{
+                        RecorderService.mediaPlayer.seekTo(length);
+                        RecorderService.mediaPlayer.start();
+                    }
                 }
             }
         });
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sharedPreferences.contains("STATE_TXT")){
+            estado.setText(sharedPreferences.getString("STATE_TXT",""));
+        }
     }
 
     private void startPlayingAudio(String audioPath) {
