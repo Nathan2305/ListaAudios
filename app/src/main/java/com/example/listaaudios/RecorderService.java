@@ -17,10 +17,16 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import static com.example.listaaudios.MainActivity.FOLDER_AUDIO;
+import static com.example.listaaudios.MainActivity.draw_play;
+import static com.example.listaaudios.MainActivity.draw_stop;
 import static com.example.listaaudios.MainActivity.editor;
 import static com.example.listaaudios.MainActivity.estado;
+import static com.example.listaaudios.MainActivity.playStop;
 import static com.example.listaaudios.MainActivity.seekBar;
 import static com.example.listaaudios.MainActivity.sharedPreferences;
+import static com.example.listaaudios.MainActivity.statePlaying;
+import static com.example.listaaudios.MainActivity.statePlaying_play;
+import static com.example.listaaudios.MainActivity.statePlaying_stop;
 
 public class RecorderService extends Service implements MediaPlayer.OnPreparedListener {
     MediaRecorder mediaRecorder;
@@ -68,9 +74,11 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
                     Utils.showToast(this, "Iniciando servicio de audio");
                     editor = sharedPreferences.edit();
                     editor.putString("STATE", "PLAYING");
+                    editor.putInt("PLAYSTOP_IMAGE", draw_play);
                     editor.putString("STATE_TXT", "Grabando audio...");
                     editor.apply();
                     estado.setText(sharedPreferences.getString("STATE_TXT", ""));
+                    playStop.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYSTOP_IMAGE", 0)));
                 } else {
                     Utils.showToast(this, "No se creó el archivo :" + nameAudio);
                 }
@@ -127,14 +135,19 @@ public class RecorderService extends Service implements MediaPlayer.OnPreparedLi
         editor = sharedPreferences.edit();
         editor.putString("STATE", "NO_PLAYING");
         editor.putString("STATE_TXT", "");
+        editor.putInt("PLAYSTOP_IMAGE", draw_stop);
         editor.apply();
         estado.setText(sharedPreferences.getString("STATE_TXT", ""));
-
+        playStop.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYSTOP_IMAGE", 0)));
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         mp.start();
+        editor=sharedPreferences.edit();
+        editor.putInt("PLAYING_STATE_IMAGE", statePlaying_stop);
+        editor.apply();
+        statePlaying.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYING_STATE_IMAGE", 0)));
         seekBar.setMax(mp.getDuration());
         changeSeekbar(mp);
     }

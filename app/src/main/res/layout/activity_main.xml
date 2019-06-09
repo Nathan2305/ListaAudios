@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@id/playStop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -35,38 +34,32 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/recycler"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="10dp">
+
+        <ImageView
+            android:id="@+id/statePlaying"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_weight="1" />
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1" />
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp" />
-
-            <Button
-                android:id="@+id/playStopAudio"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
-
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp" />
-        </LinearLayout>
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:src="@drawable/close" />
     </LinearLayout>
 
     <!-- app:layout_constraintBottom_toTopOf="@id/playStop"-->
@@ -76,12 +69,11 @@
         android:id="@+id/playStop"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/baseline_record_voice_over_white_48"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/container"
+        app:layout_constraintTop_toBottomOf="@id/estado"
         app:layout_constraintVertical_bias="0.882"
         tools:ignore="MissingConstraints" />
 

@@ -25,26 +25,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    FloatingActionButton playStop;
+    public static FloatingActionButton playStop;
     RecyclerView recycler;
     RecyclerView.LayoutManager layoutManager;
     static RecyclerView.Adapter adapter;
     public static String FOLDER_AUDIO = "";
     public static AppCompatSeekBar seekBar;
-    Button playStopAudio;
-    static File file;
+    public static File file;
     public static SharedPreferences sharedPreferences;
     public static SharedPreferences.Editor editor;
     static ArrayList<String> listAudios = null;
-   public static TextView estado;
-    int length;
+    public static TextView estado;
+    public static ImageView statePlaying;
+    public static int draw_play, draw_stop, statePlaying_play, statePlaying_stop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        playStopAudio=findViewById(R.id.playStopAudio);
-        estado=findViewById(R.id.estado);
+        statePlaying = findViewById(R.id.statePlaying);
+        draw_play = R.drawable.baseline_record_voice_over_white_48;
+        draw_stop = R.drawable.audio_icon;
+        statePlaying_play = R.drawable.play_btn;
+        statePlaying_stop = R.drawable.stop_btn;
+        estado = findViewById(R.id.estado);
         sharedPreferences = getApplicationContext().getSharedPreferences("AUDIO_PREFERENCES", MODE_PRIVATE);
         seekBar = findViewById(R.id.seekBar);
         FOLDER_AUDIO = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cibertec/Audios";
@@ -70,6 +74,18 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
         recycler.hasFixedSize();
         playStop = findViewById(R.id.playStop);
+        if (!sharedPreferences.contains("PLAYSTOP_IMAGE")) {
+            editor = sharedPreferences.edit();
+            editor.putInt("PLAYSTOP_IMAGE", draw_stop);
+            editor.apply();
+            playStop.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYSTOP_IMAGE", 0)));
+        }
+        if (!sharedPreferences.contains("PLAYING_STATE_IMAGE")) {
+            editor = sharedPreferences.edit();
+            editor.putInt("PLAYING_STATE_IMAGE", statePlaying_stop);
+            editor.apply();
+            statePlaying.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYING_STATE_IMAGE", 0)));
+        }
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,29 +106,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        playStopAudio.setOnClickListener(new View.OnClickListener() {
+        statePlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (RecorderService.mediaPlayer!=null){
-                    if (RecorderService.mediaPlayer.isPlaying()){
+                if (RecorderService.mediaPlayer != null) {
+                    if (RecorderService.mediaPlayer.isPlaying()) {
                         RecorderService.mediaPlayer.stop();
-                        length=RecorderService.mediaPlayer.getCurrentPosition();
-                    }else{
-                        RecorderService.mediaPlayer.seekTo(length);
-                        RecorderService.mediaPlayer.start();
+                        editor = sharedPreferences.edit();
+                        editor.putInt("PLAYING_STATE_IMAGE", statePlaying_play);
+                        editor.apply();
+                        statePlaying.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYING_STATE_IMAGE", 0)));
                     }
                 }
             }
         });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (sharedPreferences.contains("STATE_TXT")){
-            estado.setText(sharedPreferences.getString("STATE_TXT",""));
+        if (sharedPreferences.contains("STATE_TXT")) {
+            estado.setText(sharedPreferences.getString("STATE_TXT", ""));
         }
+        if (sharedPreferences.contains("PLAYSTOP_IMAGE")) {
+            playStop.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYSTOP_IMAGE", 0)));
+        }
+        if (sharedPreferences.contains("PLAYING_STATE_IMAGE")) {
+            statePlaying.setImageDrawable(getResources().getDrawable(sharedPreferences.getInt("PLAYING_STATE_IMAGE", 0)));
+        }
+
+
     }
 
     private void startPlayingAudio(String audioPath) {
@@ -123,12 +146,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static void loadListAudios(File file) {
-        listAudios = new ArrayList<>();
-        File[] audios = file.listFiles();
-        for (File each_audio : audios) {
-            listAudios.add(each_audio.getName());
+        if (file != null) {
+            listAudios = new ArrayList<>();
+            File[] audios = file.listFiles();
+            if (audios != null) {
+                for (File each_audio : audios) {
+                    listAudios.add(each_audio.getName());
+                }
+            }
         }
-
     }
 
     public static void addNewAudio(String name) {
